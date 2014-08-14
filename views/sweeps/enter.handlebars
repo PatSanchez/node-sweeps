@@ -1,1 +1,19 @@
 {{{master_page_template_content}}}
+
+<h1>Settings</h1>
+{{#each settings}}
+    <p>{{key}}</p>
+{{/each}}
+
+<h1>Matchups</h1>
+
+{{#each matchups}}  
+    <h2>{{name}}</h2>
+    <p>Start Date: {{start_date}}</p>
+    <p>End Date: {{end_date}}</p>
+{{/each}}
+
+<h1>Forms</h1>
+{{#each forms}}
+    <h2>{{name}}</h2>
+{{/each}}

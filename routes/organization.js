@@ -4,7 +4,7 @@ module.exports = function(app){
             {
                 headers: app.headers
             })
-            .on('complete', function(result){
+            .once('complete', function(result){
                 var organization_promotions = [];
                 result.organization_promotions.forEach(function(op){
                     var promotionId = op.promotion_id;
