@@ -8,8 +8,11 @@ module.exports = function(app){
             }
         )
         .once('complete', function(result){
-            var promotionContents, settings, matchups, render, forms;
+            var promotionContents, settings, matchups, render, forms, opHeaders;
             promotionContents = result.promotion_contents[0];
+            var test = function(input){
+                console.log(input);    
+            };
             render = function(){
                 if(settings && matchups && forms){
                     res.render('sweeps/enter', {
@@ -24,16 +27,18 @@ module.exports = function(app){
                 /href="\/staticcontent\//gi,
                 'href="https://sanchezmedia.secondstreetapp.com/staticcontent/'
             );
+                
             //From those contents, add additional headers
-            app.headers['X-Organization-Id'] = promotionContents.organization_id;
-            app.headers['X-Organization-Promotion-Id'] = promotionContents.organization_promotion_id;
-            app.headers['X-Promotion-Id'] = promotionContents.promotion_id;
+            opHeaders = JSON.parse(JSON.stringify(app.headers));
+            opHeaders['X-Organization-Id'] = promotionContents.organization_id;
+            opHeaders['X-Organization-Promotion-Id'] = promotionContents.organization_promotion_id;
+            opHeaders['X-Promotion-Id'] = promotionContents.promotion_id;
             
             //Then get some more stuff
             //In theory, should be able to do all of this simultaneously
             app.rest.get('https://sanchezmedia.secondstreetapp.com/api/settings?category=UI_Text', 
                 {
-                    headers: app.headers
+                    headers: opHeaders
                 }
             )
             .once('complete',function(result){
@@ -43,7 +48,7 @@ module.exports = function(app){
                 
             app.rest.get('https://sanchezmedia.secondstreetapp.com/api/matchups',
                 {
-                    headers: app.headers
+                    headers: opHeaders
                 }
             )
             .once('complete',function(result){
@@ -53,7 +58,7 @@ module.exports = function(app){
 
             app.rest.get('https://sanchezmedia.secondstreetapp.com/api/forms',
                 {
-                    headers: app.headers
+                    headers: opHeaders
                 }
             )
             .once('complete',function(result){
