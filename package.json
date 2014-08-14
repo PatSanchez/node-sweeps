@@ -1,0 +1,11 @@
+{
+    "name": "node-sweeps",
+    "description": "An implementation of Second Street's API in Node",
+    "version": "0.0.1-1",
+    "private": true,
+    "dependencies": {
+        "express": "latest",
+        "express3-handlebars": "latest",
+        "restler": "latest"
+    }
+}

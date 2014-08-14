@@ -1,0 +1,11 @@
+<h1>{{organization.name}}</h1>
+{{#if organization_promotions}}
+    <ul>
+        {{#each organization_promotions}}
+            <li>
+                <a href="/sweeps/{{unique_id}}">{{name}}</a>
+            </li>
+        {{/each}}
+        
+    </ul>
+{{/if}}
