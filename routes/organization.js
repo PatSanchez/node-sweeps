@@ -6,6 +6,8 @@ module.exports = function(app){
             })
             .once('complete', function(result){
                 var organization_promotions = [];
+                
+                //Combine Org Promos and Promos
                 result.organization_promotions.forEach(function(op){
                     var promotionId = op.promotion_id;
                     var combined = op;
@@ -16,6 +18,8 @@ module.exports = function(app){
                     });
                     organization_promotions.push(combined);
                 });
+                
+                //Limit to just sweeps
                 var sweeps = organization_promotions.filter(function(el){
                     if(el.promotion){
                         return el.promotion.promotion_type_id === 5;
