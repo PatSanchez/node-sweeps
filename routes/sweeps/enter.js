@@ -1,6 +1,41 @@
 module.exports = function(app){
     app.get("/sweeps/:guid/enter", function(req, res){
         
+        //Determines if the contest is active and when the next round is
+        var contestStatus = {
+            isActive: function(matchups){
+                var contestActive = false;
+                var now = new Date();
+                matchups.forEach(function(matchup){
+                    var startDate = new Date(matchup.start_date);
+                    var endDate = matchup.end_date ? new Date(matchup.end_date) : new Date('9999-07-28T17:01:41.28');
+                    if(now > startDate && now < endDate){
+                        contestActive = true;
+                    }
+                });
+                return contestActive;
+            },
+            nextRoundStart: function(matchups){
+                var nextRound = null;
+                var now = new Date();
+                matchups.forEach(function(matchup){
+                    var startDate = new Date(matchup.start_date);
+                    var endDate = matchup.end_date ? new Date(matchup.end_date) : new Date('9999-07-28T17:01:41.28');
+                    if(startDate > now){
+                        if(nextRound !== null){
+                            if(startDate < nextRound){
+                                nextRound = startDate;
+                            }
+                        }
+                        else {
+                            nextRound = startDate;
+                        }
+                    }
+                });
+                return nextRound;
+            }
+        };
+        
         
         app.rest.get('https://sanchezmedia.secondstreetapp.com/api/promotion_contents?organizationPromotionUniqueId=' + req.params.guid,
             {
@@ -21,7 +56,9 @@ module.exports = function(app){
                             master_page_template_content_bottom: promotionContents.master_page_template_content_bottom,
                             settings: settings,
                             matchups: matchups,
-                            forms: forms
+                            forms: forms,
+                            isActive: contestStatus.isActive(matchups),
+                            nextRoundStart: contestStatus.nextRoundStart(matchups)
                         });
                     }
                 };
@@ -29,6 +66,8 @@ module.exports = function(app){
                     /href="\/staticcontent\//gi,
                     'href="https://sanchezmedia.secondstreetapp.com/staticcontent/'
                 );
+                
+                //This splits the template contents into a top and bottom so we can inject the form in between
                 promotionContents.master_page_template_content_top = promotionContents.master_page_template_content.split(
                     '<form'
                 )[0];
@@ -43,7 +82,6 @@ module.exports = function(app){
                 opHeaders['X-Promotion-Id'] = promotionContents.promotion_id;
                 
                 //Then get some more stuff
-                //In theory, should be able to do all of this simultaneously
                 app.rest.get('https://sanchezmedia.secondstreetapp.com/api/settings?category=UI_Text', 
                     {
                         headers: opHeaders
@@ -75,7 +113,7 @@ module.exports = function(app){
                 )
                 .once('complete',
                     function(result){
-                        forms = result.forms;
+                        var tempForms = result.forms;
                         var formFieldGroups = result.form_field_groups;
                         var formFields = result.form_fields;
                         var fields = result.fields;
@@ -97,8 +135,8 @@ module.exports = function(app){
                                 }
                             })
                         });
-                        
-                        forms.forEach(function(form){
+
+                        tempForms.forEach(function(form){
                             form.nestedGroups = [];
                             formFieldGroups.forEach(function(ffg){
                                 if(form.form_field_groups.indexOf(ffg.id) > -1){
@@ -106,6 +144,7 @@ module.exports = function(app){
                                 }
                             })
                         });
+                        forms = tempForms;
                         render();
                     }
                 );

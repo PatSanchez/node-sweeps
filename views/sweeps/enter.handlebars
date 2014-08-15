@@ -1,22 +1,23 @@
 {{{master_page_template_content_top}}}
-{{> fields/email}}
-{{> terms}}
-<button type="submit" class="ssButton ssButtonPrimary ssLoginButton">
-    Continue
-</button>
+{{#if isActive}}
+    {{> fields/email}}
+    {{> terms}}
+    <button type="submit" class="ssButton ssButtonPrimary ssLoginButton">
+        Continue
+    </button>
+{{else}}
+    {{#if nextRoundStart}}
+        <p>You can enter starting {{nextRoundStart}}</p>
+    {{else}}
+        <p>Sorry, the contest is over!</p>
+    {{/if}}
+{{/if}}
+
 {{{master_page_template_content_bottom}}}
 
 <h1>Settings</h1>
 {{#each settings}}
     <p>{{key}}</p>
-{{/each}}
-
-<h1>Matchups</h1>
-
-{{#each matchups}}  
-    <h2>{{name}}</h2>
-    <p>Start Date: {{start_date}}</p>
-    <p>End Date: {{end_date}}</p>
 {{/each}}
 
 <h1>Forms</h1>
