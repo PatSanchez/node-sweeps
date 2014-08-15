@@ -58,7 +58,19 @@ module.exports = function(app){
                             matchups: matchups,
                             forms: forms,
                             isActive: contestStatus.isActive(matchups),
-                            nextRoundStart: contestStatus.nextRoundStart(matchups)
+                            nextRoundStart: contestStatus.nextRoundStart(matchups),
+                            helpers: {
+                                translate: function(settingKey, replace, replaceWith){
+                                    var lookup = {};
+                                    for (var i = 0, len = settings.length; i < len; i++) {
+                                        lookup[settings[i].key] = settings[i];
+                                    }
+                                    if(replace){
+                                        return lookup[settingKey].value.replace(replace, replaceWith)
+                                    }
+                                    return lookup[settingKey].value;
+                                }
+                            }
                         });
                     }
                 };

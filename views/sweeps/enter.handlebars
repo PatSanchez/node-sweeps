@@ -1,24 +1,21 @@
 {{{master_page_template_content_top}}}
 {{#if isActive}}
     {{> fields/email}}
-    {{> terms}}
+    <div class="ssFormPart">
+        {{{translate 'agree_to_terms'}}}
+    </div>
     <button type="submit" class="ssButton ssButtonPrimary ssLoginButton">
-        Continue
+        {{translate 'continue'}}
     </button>
 {{else}}
     {{#if nextRoundStart}}
-        <p>You can enter starting {{nextRoundStart}}</p>
+        <p>{{translate 'next_entry_interval_start_teaser' '{{date}}' nextRoundStart}}</p>
     {{else}}
-        <p>Sorry, the contest is over!</p>
+        <p>{{translate 'promo_header_after_over'}}</p>
     {{/if}}
 {{/if}}
 
 {{{master_page_template_content_bottom}}}
-
-<h1>Settings</h1>
-{{#each settings}}
-    <p>{{key}}</p>
-{{/each}}
 
 <h1>Forms</h1>
 <hr/>

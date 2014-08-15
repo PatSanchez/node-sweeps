@@ -1,6 +1,7 @@
 var express = require('express');
 var exphbs  = require('express3-handlebars');
 var app = express();
+var helpers = require('./lib/helpers');
 
 app.rest = require('restler');
 
@@ -15,7 +16,8 @@ var port = 3000;
 
 app.engine('handlebars', exphbs(
     {
-        defaultLayout: 'main'
+        defaultLayout: 'main',
+        helpers: helpers
     }
 ));
 app.set('view engine', 'handlebars');
