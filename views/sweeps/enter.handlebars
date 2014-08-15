@@ -20,6 +20,14 @@
 {{/each}}
 
 <h1>Forms</h1>
+<hr/>
 {{#each forms}}
-    <h2>{{name}}</h2>
+    <h1>{{name}}</h1>
+    {{#each nestedGroups}}
+        <h2>Form Field Group: {{name}}</h2>
+        {{#each nestedFormFields}}
+            <h3>Form Field: {{id}}</h3>
+            <h4>Field: {{nestedField.name}}</h4>
+        {{/each}}
+    {{/each}}
 {{/each}}

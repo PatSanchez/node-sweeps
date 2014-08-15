@@ -76,6 +76,36 @@ module.exports = function(app){
                 .once('complete',
                     function(result){
                         forms = result.forms;
+                        var formFieldGroups = result.form_field_groups;
+                        var formFields = result.form_fields;
+                        var fields = result.fields;
+                        
+                        //Converting sideloaded data to nested data
+                        formFields.forEach(function(formField){
+                            fields.forEach(function(field){
+                                if(formField.field_id === field.id){
+                                    formField.nestedField = field;
+                                }
+                            });  
+                        });
+
+                        formFieldGroups.forEach(function(ffg){
+                            ffg.nestedFormFields = [];
+                            formFields.forEach(function(formField){
+                                if(ffg.form_fields.indexOf(formField.id) > -1){
+                                    ffg.nestedFormFields.push(formField);
+                                }
+                            })
+                        });
+                        
+                        forms.forEach(function(form){
+                            form.nestedGroups = [];
+                            formFieldGroups.forEach(function(ffg){
+                                if(form.form_field_groups.indexOf(ffg.id) > -1){
+                                    form.nestedGroups.push(ffg);
+                                }
+                            })
+                        });
                         render();
                     }
                 );
