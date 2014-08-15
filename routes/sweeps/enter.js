@@ -43,20 +43,21 @@ module.exports = function(app){
             }
         ).once('complete', 
             function(result){
-                var promotionContents, settings, matchups, render, forms, opHeaders;
+                var promotionContents, settings, matchups, render, forms, opHeaders, entryForm, registrationForm;
                 promotionContents = result.promotion_contents[0];
                 var test = function(input){
                     console.log(input);    
                 };
                 //The render function we will eventually use
                 render = function(){
-                    if(settings && matchups && forms){
+                    if(settings && matchups && registrationForm && entryForm){
                         res.render('sweeps/enter', {
                             master_page_template_content_top: promotionContents.master_page_template_content_top,
                             master_page_template_content_bottom: promotionContents.master_page_template_content_bottom,
                             settings: settings,
                             matchups: matchups,
-                            forms: forms,
+                            registrationForm: registrationForm,
+                            entryForm: entryForm,
                             isActive: contestStatus.isActive(matchups),
                             nextRoundStart: contestStatus.nextRoundStart(matchups),
                             helpers: {
@@ -125,7 +126,7 @@ module.exports = function(app){
                 )
                 .once('complete',
                     function(result){
-                        var tempForms = result.forms;
+                        var forms = result.forms;
                         var formFieldGroups = result.form_field_groups;
                         var formFields = result.form_fields;
                         var fields = result.fields;
@@ -148,7 +149,7 @@ module.exports = function(app){
                             })
                         });
 
-                        tempForms.forEach(function(form){
+                        forms.forEach(function(form){
                             form.nestedGroups = [];
                             formFieldGroups.forEach(function(ffg){
                                 if(form.form_field_groups.indexOf(ffg.id) > -1){
@@ -156,7 +157,13 @@ module.exports = function(app){
                                 }
                             })
                         });
-                        forms = tempForms;
+                        entryForm = forms.filter(function(el){
+                            return el.form_type_id === 2;
+                        })[0];
+                        
+                        registrationForm = forms.filter(function(el){
+                            return el.form_type_id === 1;
+                        })[0];
                         render();
                     }
                 );
