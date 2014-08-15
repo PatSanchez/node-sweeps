@@ -1,7 +1,6 @@
 var express = require('express');
 var exphbs  = require('express3-handlebars');
 var app = express();
-app.hbs = exphbs.create({defaultLayout: 'main'});
 
 app.rest = require('restler');
 
@@ -14,7 +13,11 @@ app.headers = {
 
 var port = 3000;
 
-app.engine('handlebars', app.hbs.engine);
+app.engine('handlebars', exphbs(
+    {
+        defaultLayout: 'main'
+    }
+));
 app.set('view engine', 'handlebars');
 
 app.use(express.static(__dirname + '/public'));

@@ -16,7 +16,8 @@ module.exports = function(app){
             render = function(){
                 if(settings && matchups && forms){
                     res.render('sweeps/enter', {
-                        master_page_template_content: promotionContents.master_page_template_content,
+                        master_page_template_content_top: promotionContents.master_page_template_content_top,
+                        master_page_template_content_bottom: promotionContents.master_page_template_content_bottom,
                         settings: settings,
                         matchups: matchups,
                         forms: forms
@@ -27,6 +28,12 @@ module.exports = function(app){
                 /href="\/staticcontent\//gi,
                 'href="https://sanchezmedia.secondstreetapp.com/staticcontent/'
             );
+            promotionContents.master_page_template_content_top = promotionContents.master_page_template_content.split(
+                '<form'
+            )[0];
+            promotionContents.master_page_template_content_bottom = promotionContents.master_page_template_content.split(
+                '</form>'
+            )[1];
                 
             //From those contents, add additional headers
             opHeaders = JSON.parse(JSON.stringify(app.headers));

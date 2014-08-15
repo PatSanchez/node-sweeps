@@ -6,6 +6,7 @@
     "dependencies": {
         "express": "latest",
         "express3-handlebars": "latest",
-        "restler": "latest"
+        "restler": "latest",
+        "promise": "latest"
     }
 }
