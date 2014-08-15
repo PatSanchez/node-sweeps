@@ -1,5 +1,5 @@
 var express = require('express');
-var exphbs  = require('express3-handlebars');
+var exphbs  = require('express-handlebars');
 var app = express();
 var helpers = require('./lib/helpers');
 
